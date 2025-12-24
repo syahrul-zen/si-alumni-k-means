@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nis', 20)->unique();
             $table->string('nama_lengkap');
             $table->date('tanggal_lahir');
-            $table->enum('jenis_kelamin', ['laki_laki, perempuan']);
+            $table->enum('jenis_kelamin', ['laki_laki', 'perempuan']);
             $table->string('alamat');
             $table->string('no_telepon', 15)->nullable();
             $table->string('email')->nullable();

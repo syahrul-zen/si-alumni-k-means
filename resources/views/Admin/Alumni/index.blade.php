@@ -1,20 +1,22 @@
-@extends('Admin.Layouts.main')
+@extends("Admin.Layouts.main")
 
-@section('container')
+@section("container")
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Tables</h1>
     <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
         For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official
             DataTables documentation</a>.</p>
 
+    <a href="{{ url("alumni/create") }}" class="btn btn-primary">Tambah</a>
+
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card mb-4 shadow">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <h6 class="font-weight-bold text-primary m-0">DataTables Example</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table-bordered table" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Name</th>
