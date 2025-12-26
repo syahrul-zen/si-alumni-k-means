@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlumniController;
+use App\Models\NumberDataAlumni;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +19,9 @@ Route::get('/', function () {
     return view('Admin.dashboard');
 });
 
-Route::get('/alumni', function() {
-    return view('Admin.Alumni.index');
-});
+// Route::get('/alumni', function() {
+//     return view('Admin.Alumni.index');
+// });
 
 Route::resource('alumni', AlumniController::class);
 
@@ -433,4 +434,10 @@ Route::get("/test4", function() {
     show($clusters2,$alumni,"DENGAN BOBOT KEAHLIAN");
 
 
+});
+
+Route::get('/test-real', [AlumniController::class, 'clustering']);
+
+Route::get('/data', function() {
+    return NumberDataAlumni::select('value_jenis_pekerjaan', 'value_jenjang_pendidikan', 'value_tahun_lulus', 'value_domisili', 'value_jenis_keahlian')->get();
 });

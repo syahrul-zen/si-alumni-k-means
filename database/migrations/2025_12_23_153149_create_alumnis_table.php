@@ -23,11 +23,11 @@ return new class extends Migration
             $table->string('email')->nullable();
 
             // Data untuk k-means
-            $table->enum('jenis_pekerjaan', ['mahasiswa(belum_bekerja)', 'profesional', 'wirausaha']);
+            $table->enum('jenis_pekerjaan', ['mahasiswa', 'pns', 'wiraswasta', 'lain_lain']);
             $table->enum('jenjang_pendidikan', ['SMA', 'D3', 'S1', 'S2', 'S3']);
             $table->year('tahun_lulus');
             $table->string('domisili');
-            $table->enum('jenis_keahlian', ['kewirausahan', 'teknologi', 'administrasi/manajemen', 'akademik/riset', 'lain_lain']);
+            $table->enum('jenis_keahlian', ['teknologi', 'pendidikan', 'kesehatan', 'pertanian', 'lain_lain']);
 
             $table->timestamps();
         });

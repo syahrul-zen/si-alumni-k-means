@@ -22,6 +22,7 @@
 
     <link href="{{ asset('FE/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
 </head>
 
@@ -306,7 +307,7 @@
     <script src="{{ asset('FE/js/sb-admin-2.min.js') }}"></script>
 
     <!-- Page level plugins -->
-    <script src="{{ asset('FE/vendor/chart.js/Chart.min.js') }}"></script>
+    {{-- <script src="{{ asset('FE/vendor/chart.js/Chart.min.js') }}"></script> --}}
 
     <!-- Page level plugins -->
     <script src="{{ asset('FE/vendor/datatables/jquery.dataTables.min.js') }}"></script>
@@ -316,8 +317,8 @@
     <script src="{{ asset('FE/js/demo/datatables-demo.js') }}"></script>
 
     <!-- Page level custom scripts -->
-    <script src="{{ asset('FE/js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('FE/js/demo/chart-pie-demo.js') }}"></script>
+    {{-- <script src="{{ asset('FE/js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('FE/js/demo/chart-pie-demo.js') }}"></script> --}}
 
 </body>
 

@@ -1,6 +1,6 @@
-@extends("Admin.Layouts.main")
+@extends('Admin.Layouts.main')
 
-@section("container")
+@section('container')
     <div class="row">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
@@ -19,19 +19,14 @@
                     </div>
                 @endif
 
-                @session("success")
-                    <div class="alert alert-success">
-                        {{ session("success") }}
-                    </div>
-                @endsession
-
-                @session("error")
+                @session('error')
                     <div class="alert alert-danger">
-                        {{ session("error") }}
+                        {{ session('error') }}
                     </div>
                 @endsession
 
-                <form action="{{ url("/alumni") }}" method="POST">
+
+                <form action="{{ url('/alumni') }}" method="POST">
                     @csrf
 
                     <div class="row g-3">
@@ -88,10 +83,12 @@
                             <label class="form-label">Jenis Pekerjaan</label>
                             <select name="jenis_pekerjaan" class="custom-select" required>
                                 <option value="">-- Pilih --</option>
-                                <option value="wirausaha">Wirausaha</option>
-                                <option value="profesional">Profesional</option>
-                                <option value="mahasiswa">Mahasiswa / Belum Bekerja</option>
+                                <option value="pns">PNS</option>
+                                <option value="wiraswasta">Wiraswasta</option>
+                                <option value="mahasiswa">Mahasiswa</option>
+                                <option value="lain_lain">Lain-lain</option>
                             </select>
+
                         </div>
 
                         <!-- Jenjang Pendidikan -->
@@ -111,7 +108,7 @@
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Tahun Lulus</label>
                             <input type="number" name="tahun_lulus" class="form-control" min="2021"
-                                max="{{ date("Y") }}">
+                                max="{{ date('Y') }}">
                         </div>
 
                         <!-- Domisili -->
@@ -130,13 +127,13 @@
                             <label class="form-label">Jenis Keahlian</label>
                             <select name="jenis_keahlian" class="custom-select" required>
                                 <option value="">-- Pilih --</option>
-                                <option value="kewirausahaan">Kewirausahaan</option>
                                 <option value="teknologi">Teknologi</option>
-                                <option value="kreatif">Kreatif</option>
-                                <option value="administrasi">Administrasi</option>
-                                <option value="akademik">Akademik</option>
-                                <option value="dll">Lainnya</option>
+                                <option value="pendidikan">Pendidikan</option>
+                                <option value="kesehatan">Kesehatan</option>
+                                <option value="pertanian">Pertanian</option>
+                                <option value="lain_lain">Lain-lain</option>
                             </select>
+
                         </div>
 
                     </div>
