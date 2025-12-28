@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\ClusteringController;
 use App\Models\Alumni;
+use App\Models\User;
 use App\Models\AlumniCluster;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,19 @@ Route::get('/', function () {
 
 Route::resource('alumni', AlumniController::class)->middleware('admin_pimpinan');
 Route::resource('berita', BeritaController::class);
+Route::get('set-admin', function() {
+    return view('Admin.set-admin', [
+        'user' => Auth::guard('admin_pimpinan')->user()
+    ]);
+})->middleware('admin_pimpinan');
+
+Route::get('set-pimpinan', function() {
+    return view('Admin.set-pimpinan', [
+        'user' => User::where('is_admin', 0)->first()
+    ]);
+})->middleware('admin_pimpinan');
+
+Route::post('/set-admin/{user}', [AuthController::class, 'updateAdmin'])->middleware('admin_pimpinan');
 
 Route::post("/register", [AlumniController::class, 'store']);
 

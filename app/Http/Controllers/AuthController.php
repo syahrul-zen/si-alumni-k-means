@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,32 @@ class AuthController extends Controller
         return view('Auth.register', [
             'provinsi' => $provinsi
         ]);
+    }
+
+    public function updateAdmin(Request $request, User $user) {
+        $validated = $request->validate([
+            'name' => 'required|max:230',
+            'email' => [
+                'required', 'max:70', 'email',
+                'unique:admin_pimpinan,email,' . $user->id,
+                'unique:alumnis,email'
+            ],
+            'password' => 'nullable|max:15', // Jadikan nullable saat update
+              
+        ]);
+
+        // 4. Penanganan Password (Jangan diupdate jika kosong)
+        if ($request->filled('password')) {
+            // Jika Anda menggunakan Hash (sangat disarankan):
+            // $validated['password'] = bcrypt($request->password);
+            $validated['password'] = $request->password;
+        } else {
+            unset($validated['password']); // Hapus dari array agar tidak menimpa data lama
+        }
+
+        $user->update($validated);
+
+        return back()->with('success', "Berhasil mengudpate data"); 
     }
 
     public function authentication(Request $request) {

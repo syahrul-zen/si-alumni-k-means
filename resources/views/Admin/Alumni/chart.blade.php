@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach ($centroids as $c)
                         <tr>
-                            <td>{{ $c->cluster_id }}</td>
+                            <td>{{ $c->cluster_id + 1 }}</td>
                             <td>{{ $c->cluster_label }}</td>
                             <td><small><code>{{ $c->values }}</code></small></td>
                             <td>{{ $alumniCounts[$c->cluster_id] ?? 0 }}</td>
@@ -64,7 +64,7 @@
                             <td>{{ $alumni->nis }}</td>
                             <td>{{ $alumni->nama_lengkap }}</td>
                             <td>{{ $alumni->tahun_lulus }}</td>
-                            <td><span class="badge badge-info">{{ $alumni->cluster_id }}</span></td>
+                            <td><span class="badge badge-info">{{ $alumni->cluster_id + 1 }}</span></td>
                             <td>{{ $alumni->cluster_label }}</td>
                         </tr>
                     @endforeach

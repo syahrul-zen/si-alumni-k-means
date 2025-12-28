@@ -1,3 +1,4 @@
+f
 <!DOCTYPE html>
 <html>
 
@@ -112,7 +113,7 @@
                     <td>{{ $alumni->nis }}</td>
                     <td>{{ $alumni->nama_lengkap }}</td>
                     <td>{{ $alumni->tahun_lulus }}</td>
-                    <td>{{ $alumni->cluster_id }}</td>
+                    <td>{{ $alumni->cluster_id + 1 }}</td>
                     <td>{{ $alumni->cluster_label }}</td>
                 </tr>
             @endforeach

@@ -1,10 +1,14 @@
 @extends('Admin.Layouts.main')
 
 @section('container')
-    <!-- Page Heading -->
-    {{-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    </div> --}}
+    @if (Auth::guard('admin_pimpinan')->user()->is_admin)
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex">
+                <a href="{{ url('set-admin') }}" class="btn btn-success" style="margin-right: 10px">Edit Admin</a>
+                <a href="{{ url('set-pimpinan') }}" class="btn btn-success">Edit Pimpinan</a>
+            </div>
+        </div>
+    @endif
 
     <!-- Content Row -->
     <div class="row">
