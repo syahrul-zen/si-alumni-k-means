@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard Admin</title>
+    <title>Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('FE/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -23,6 +23,15 @@
     <link href="{{ asset('FE/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('FE/css/trix.css') }}">
+    <script type="text/javascript" src="{{ asset('FE/js/trix.js') }}"></script>
+
+    <style>
+        trix-toolbar [data-trix-button-group="file-tools"] {
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -70,8 +79,21 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
-                                <img class="img-profile rounded-circle" src="{{ asset('FE/img/undraw_profile.svg') }}">
+
+                                @if (Auth::guard('admin_pimpinan')->check())
+                                    <span
+                                        class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::guard('admin_pimpinan')->user()->name }}</span>
+                                    <img class="img-profile rounded-circle" src="{{ asset('FE/img/logo_bulat.png') }}">
+                                @else
+                                    @php
+                                        $user = Auth::guard('alumni')->user();
+                                    @endphp
+
+                                    <span
+                                        class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $user->nama_lengkap }}</span>
+                                    <img class="img-profile rounded-circle" src="{{ asset('File/' . $user->gambar) }}">
+                                @endif
+
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -150,7 +172,7 @@
 
                     <form action="{{ url('/logout') }}" method="POST">
                         @csrf
-                        <button class="btn btn-primary" type="submit">Logout</button>
+                        <button class="btn btn-success" type="submit">Logout</button>
                     </form>
 
                 </div>
@@ -170,6 +192,8 @@
 
     <!-- Page level plugins -->
     {{-- <script src="{{ asset('FE/vendor/chart.js/Chart.min.js') }}"></script> --}}
+    <script src="{{ asset('FE/js/chart.js') }}"></script>
+
 
     <!-- Page level plugins -->
     <script src="{{ asset('FE/vendor/datatables/jquery.dataTables.min.js') }}"></script>

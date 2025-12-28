@@ -73,7 +73,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    <script src="{{ asset('FE/js/chart.js') }}"></script>
+
     <script>
         const ctx = document.getElementById('clusterPieChart').getContext('2d');
         const clusterPieChart = new Chart(ctx, {

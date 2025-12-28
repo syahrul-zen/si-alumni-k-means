@@ -36,10 +36,20 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        // 'web' => [
+        //     'driver' => 'session',
+        //     'provider' => 'users',
+        // ],
+
+        'admin_pimpinan' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'users'
         ],
+
+        'alumni' => [
+            'driver' => 'session',
+            'provider' => 'alumnis'
+        ]
     ],
 
     /*
@@ -63,6 +73,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'alumnis' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Alumni::class
         ],
 
         // 'users' => [

@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alumni;
+use App\Models\Berita;
 use App\Models\NumberDataAlumni;
+use App\Models\AlumniCluster;
+
+use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Http\Request; // Pastikan import ini ada di bagian atas file
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\File;
+
+use Carbon\Carbon;
 
 class AlumniController extends Controller
 {
@@ -26,6 +34,7 @@ class AlumniController extends Controller
      */
     public function create()
     {
+
         $provinsi = [
             'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau',
             'Jambi', 'Bengkulu', 'Sumatera Selatan', 'Kepulauan Bangka Belitung', 'Lampung',
@@ -48,14 +57,20 @@ class AlumniController extends Controller
     public function store(Request $request)
     {
 
+        
+
         $validated = $request->validate([
             'nis' => 'required|string|max:20|unique:alumnis,nis',
             'nama_lengkap' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:laki_laki,perempuan',
             'alamat' => 'required|max:240',
-            'no_telepon' => 'required|string|max:20',
-            'email' => 'required|email',
+            'no_telepon' => 'required|string|max:20|unique:alumnis',
+            'email' => 'required|max:99|email|unique:alumnis,email|unique:admin_pimpinan,email',
+            'nama_pekerjaan' => 'sometimes|max:200',
+            'nama_tempat_bekerja' => 'sometimes|max:200',
+            'password' => 'required|max:15',
+            'gambar' => 'required|max:2100',
 
             'jenis_pekerjaan' => 'required|in:pns,wiraswasta,mahasiswa,lain_lain',
             'jenjang_pendidikan' => 'required|in:SMA,D3,S1,S2,S3',
@@ -63,6 +78,20 @@ class AlumniController extends Controller
             'domisili' => 'required|string',
             'jenis_keahlian' => 'required|in:teknologi,pendidikan,kesehatan,pertanian,lain_lain',
         ]);
+
+        // Pindah gambar ke Directory File.
+        $getImage = $request->file("gambar");
+
+        $renameFile = uniqid() . "_" . $getImage->getClientOriginalName();
+
+        $locationFile = 'File';
+
+        $validated['gambar'] = $renameFile;
+
+        $getImage->move($locationFile, $renameFile);
+        
+        // ==========  End Code Of Gambar ================
+
 
 
         DB::beginTransaction();
@@ -90,7 +119,7 @@ class AlumniController extends Controller
             // Jika semua proses di atas berhasil, simpan permanen ke database
             DB::commit();
 
-            return redirect('alumni')->with('success', 'Data alumni berhasil disimpan!');
+            return redirect('login')->with('success', 'Berhasil menyimpan data alumni, silahkan login dengan email ' . $validated['email']);
 
         } catch (Exception $e) {
             // Jika ada error sekecil apapun, batalkan semua perubahan di database
@@ -116,7 +145,7 @@ class AlumniController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Alumni $alumnus)
+    public function edit()
     {
 
         $provinsi = [
@@ -130,8 +159,8 @@ class AlumniController extends Controller
             'Papua Barat', 'Papua', 'Papua Tengah', 'Papua Pegunungan', 'Papua Selatan', 'Papua Barat Daya',
         ];
 
-        return view('Admin.Alumni.edit', [
-            'alumni' => $alumnus,
+        return view('Alumni.edit', [
+            'alumni' => Auth::guard('alumni')->user(),
             'provinsi' => $provinsi
         ]);
     }
@@ -139,46 +168,155 @@ class AlumniController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function update(Request $request, Alumni $alumnus)
+    // {
+
+    //     $rules = [
+    //         'nama_lengkap' => 'required|string|max:100',
+    //         'tanggal_lahir' => 'required|date',
+    //         'jenis_kelamin' => 'required|in:laki_laki, perempuan',
+    //         'alamat' => 'required|max:240',
+    //         'no_telepon' => 'required|string|max:20',
+    //         'email' => 'required|email|max:99',
+    //         'nama_pekerjaan' => 'sometimes|string|max:200',
+    //         'nama_tempat_bekerja' => 'sometimes|string|max:200',
+    //         'gambar' => 'required|max:2100',
+
+    //         'jenis_pekerjaan' => 'required|in:pns,wiraswasta,mahasiswa,lain_lain',
+    //         'jenjang_pendidikan' => 'required|in:SMA,D3,S1,S2,S3',
+    //         'tahun_lulus' => 'required|integer|min:2021|max:' . date('Y'),
+    //         'domisili' => 'required|string',
+    //         'jenis_keahlian' => 'required|in:teknologi,pendidikan,kesehatan,pertanian,lain_lain',
+    //     ];
+
+
+    //     if ($request->nis != $alumnus->nis) {
+    //         $rules['nis'] = 'required|string|max:20|unique:alumnis,nis';
+    //     }
+
+                
+    //     $validated = $request->validate($rules);
+        
+    //     // Pindah gambar ke Directory File.
+    //     $getImage = $request->file("gambar");
+
+    //     $renameFile = uniqid() . "_" . $getImage->getClientOriginalName();
+
+    //     $locationFile = 'File';
+
+    //     $validated['gambar'] = $renameFile;
+
+    //     $getImage->move($locationFile, $renameFile);
+        
+    //     // ==========  End Code Of Gambar ================
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         /* =======================
+    //          * 2. SIMPAN DATA ALUMNI
+    //          * ======================= */
+    //         // $alumni = Alumni::create($validated);
+    //         $alumnus->update($validated);
+
+    //         /* =======================
+    //          * 3. KONVERSI KE NUMERIC
+    //          * ======================= */
+    //         $numericData = [
+    //             // 'nis_alumni' => $alumni->nis,
+    //             'value_jenis_pekerjaan' => $this->mapJenisPekerjaan($validated['jenis_pekerjaan']),
+    //             'value_jenjang_pendidikan' => $this->mapJenjangPendidikan($validated['jenjang_pendidikan']),
+    //             'value_tahun_lulus' => $this->normalizeTahunLulus($validated['tahun_lulus']),
+    //             'value_domisili' => $this->mapDomisili($validated['domisili']),
+    //             'value_jenis_keahlian' => $this->mapJenisKeahlian($validated['jenis_keahlian']),
+    //         ];
+
+    //         NumberDataAlumni::where('nis_alumni', $alumnus->nis)->update($numericData);
+
+    //         // NumberDataAlumni::create($numericData);
+
+    //         // Jika semua proses di atas berhasil, simpan permanen ke database
+    //         DB::commit();
+
+    //         return redirect('alumni')->with('success', 'Data alumni berhasil disimpan!');
+
+
+
+    //     } catch (Exception $e) {
+    //         // Jika ada error sekecil apapun, batalkan semua perubahan di database
+    //         DB::rollBack();
+
+    //         // Log error atau kembalikan pesan error ke user
+    //         return redirect()->back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+    //     }
+
+    // }
+
     public function update(Request $request, Alumni $alumnus)
     {
-        $rules = [
+
+        // 2. Validasi (Gunakan ignore pada unique agar data lama tetap valid)
+        $validated = $request->validate([
+            'nis' => 'required|string|max:20|unique:alumnis,nis,' . $alumnus->id,
             'nama_lengkap' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:laki_laki, perempuan',
+            'jenis_kelamin' => 'required|in:laki_laki,perempuan',
             'alamat' => 'required|max:240',
-            'no_telepon' => 'required|string|max:20',
-            'email' => 'required|email',
+            'no_telepon' => 'required|string|max:20|unique:alumnis,no_telepon,' . $alumnus->id,
+            'email' => [
+                'required', 'max:99', 'email',
+                'unique:alumnis,email,' . $alumnus->id,
+                'unique:admin_pimpinan,email'
+            ],
+            'nama_pekerjaan' => 'nullable|max:200',
+            'nama_tempat_bekerja' => 'nullable|max:200',
+            'password' => 'nullable|max:15', // Jadikan nullable saat update
+            'gambar' => 'nullable|image|max:2100', // Nullable agar tidak wajib upload ulang
 
             'jenis_pekerjaan' => 'required|in:pns,wiraswasta,mahasiswa,lain_lain',
             'jenjang_pendidikan' => 'required|in:SMA,D3,S1,S2,S3',
             'tahun_lulus' => 'required|integer|min:2021|max:' . date('Y'),
             'domisili' => 'required|string',
             'jenis_keahlian' => 'required|in:teknologi,pendidikan,kesehatan,pertanian,lain_lain',
-        ];
+        ]);
 
+        // 3. Penanganan Gambar
+        if ($request->hasFile('gambar')) {
+            // Upload gambar baru
+            $getImage = $request->file("gambar");
+            $renameFile = uniqid() . "_" . $getImage->getClientOriginalName();
+            $getImage->move('File', $renameFile);
+            $validated['gambar'] = $renameFile;
 
-        if ($request->nis != $alumnus->nis) {
-            $rules['nis'] = 'required|string|max:20|unique:alumnis,nis';
+            // Hapus gambar lama :
+            File::delete("File/". $alumnus->gambar);
+        } else {
+            // Jika tidak upload, gunakan gambar lama
+            $validated['gambar'] = $alumnus->gambar;
         }
 
-        $validated = $request->validate($rules);
-
-        
+        // 4. Penanganan Password (Jangan diupdate jika kosong)
+        if ($request->filled('password')) {
+            // Jika Anda menggunakan Hash (sangat disarankan):
+            // $validated['password'] = bcrypt($request->password);
+            $validated['password'] = $request->password;
+        } else {
+            unset($validated['password']); // Hapus dari array agar tidak menimpa data lama
+        }
 
         DB::beginTransaction();
 
         try {
             /* =======================
-             * 2. SIMPAN DATA ALUMNI
-             * ======================= */
-            // $alumni = Alumni::create($validated);
+            * 5. UPDATE DATA ALUMNI
+            * ======================= */
             $alumnus->update($validated);
 
             /* =======================
-             * 3. KONVERSI KE NUMERIC
-             * ======================= */
+            * 6. UPDATE DATA NUMERIC
+            * ======================= */
             $numericData = [
-                // 'nis_alumni' => $alumni->nis,
+                'nis_alumni' => $alumnus->nis, // Pastikan NIS terupdate jika berubah
                 'value_jenis_pekerjaan' => $this->mapJenisPekerjaan($validated['jenis_pekerjaan']),
                 'value_jenjang_pendidikan' => $this->mapJenjangPendidikan($validated['jenjang_pendidikan']),
                 'value_tahun_lulus' => $this->normalizeTahunLulus($validated['tahun_lulus']),
@@ -186,23 +324,17 @@ class AlumniController extends Controller
                 'value_jenis_keahlian' => $this->mapJenisKeahlian($validated['jenis_keahlian']),
             ];
 
-            NumberDataAlumni::where('nis_alumni', $alumnus->nis)->update($numericData);
+            // Gunakan update pada model NumberDataAlumni berdasarkan NIS lama
+            NumberDataAlumni::where('nis_alumni', $alumnus->getOriginal('nis'))->update($numericData);
 
-            // NumberDataAlumni::create($numericData);
-
-            // Jika semua proses di atas berhasil, simpan permanen ke database
             DB::commit();
 
-            return redirect('alumni')->with('success', 'Data alumni berhasil disimpan!');
+            return back()->with('success', 'Data alumni ' . $alumnus->nama_lengkap . ' berhasil diperbarui.');
 
         } catch (Exception $e) {
-            // Jika ada error sekecil apapun, batalkan semua perubahan di database
             DB::rollBack();
-
-            // Log error atau kembalikan pesan error ke user
-            return redirect()->back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
     }
 
     /**
@@ -327,6 +459,47 @@ class AlumniController extends Controller
 
             return ($tahun - $min) / ($max - $min);
         }
+
+        // ============================= FUNGSI UNTUK ALUMNI ===============================================
+        public function dashboardAlumni() {
+
+            $tahunSekarang = Carbon::now()->year;
+            $tahunAwal = $tahunSekarang - 4;
+
+            // Ambil jumlah alumni per tahun
+            $data = Alumni::selectRaw('tahun_lulus, COUNT(*) as total')
+                ->whereBetween('tahun_lulus', [$tahunAwal, $tahunSekarang])
+                ->groupBy('tahun_lulus')
+                ->orderBy('tahun_lulus')
+                ->pluck('total', 'tahun_lulus')
+                ->toArray();
+
+            // Pastikan 5 tahun tetap muncul walau datanya 0
+            $labels = [];
+            $values = [];
+
+            for ($tahun = $tahunAwal; $tahun <= $tahunSekarang; $tahun++) {
+                $labels[] = $tahun;
+                $values[] = $data[$tahun] ?? 0;
+            }
+
+            return view('Alumni.dashboard', [
+                'jumlahAlumni' => Alumni::count(),
+                'jumlahAlumniC1' => AlumniCluster::where('cluster_id', 0)->count(),
+                'jumlahAlumniC2' => AlumniCluster::where('cluster_id', 1)->count(),
+                'jumlahAlumniC3' => AlumniCluster::where('cluster_id', 2)->count(),
+                'alumni' => Auth::guard('alumni')->user(),
+                'news' => Berita::orderBy('tanggal', 'asc')->paginate(3),
+                'labels' => $labels, 
+                'values' => $values
+            ]);
+        }
+
+
+
+
+
+
 
         // ================================== KODINGAN LAMA ============================================================
 

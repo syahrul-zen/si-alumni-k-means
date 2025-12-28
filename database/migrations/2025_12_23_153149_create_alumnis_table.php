@@ -17,10 +17,14 @@ return new class extends Migration
             $table->string('nis', 20)->unique();
             $table->string('nama_lengkap');
             $table->date('tanggal_lahir');
-            $table->enum('jenis_kelamin', ['laki_laki', 'perempuan']);
+            $table->string('jenis_kelamin', 20);
             $table->string('alamat');
             $table->string('no_telepon', 15)->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string("nama_pekerjaan")->nullable();
+            $table->string('nama_tempat_bekerja')->nullable();
+            $table->string("gambar")->nullable();
 
             // Data untuk k-means
             $table->enum('jenis_pekerjaan', ['mahasiswa', 'pns', 'wiraswasta', 'lain_lain']);

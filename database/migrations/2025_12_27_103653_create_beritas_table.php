@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin_pimpinan', function (Blueprint $table) {
+        Schema::create('beritas', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
 
-            $table->boolean('is_admin');
+            $table->string("judul")->unique();
+            $table->date("tanggal");
+            $table->string("gambar");
+            $table->text('deskripsi');
+
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('beritas');
     }
 };

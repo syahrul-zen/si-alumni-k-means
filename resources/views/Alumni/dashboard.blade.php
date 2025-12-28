@@ -2,9 +2,11 @@
 
 @section('container')
     <!-- Page Heading -->
-    {{-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    </div> --}}
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Selamat Datang {{ $alumni->nama_lengkap }}</h1>
+        {{-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
+    </div>
 
     <!-- Content Row -->
     <div class="row">
@@ -99,6 +101,50 @@
             </div>
 
         </div>
+    </div>
+
+
+    <div class="row mt-4">
+
+        <div class="col-12">
+            <h1 class="h3 mb-3 text-gray-800">Berita Terkini Pondok Pesantren</h1>
+        </div>
+
+        @forelse ($news as $item)
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow h-100">
+                    <img src="{{ asset('File/' . $item->gambar) }}" class="card-img-top" alt="{{ $item->judul }}"
+                        style="height: 200px; object-fit: cover;"> {{-- Tambahkan ini --}}
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ $item->judul }}</h5>
+
+                        <p class="card-text text-muted small">
+                            <i class="far fa-calendar"></i>
+                            {{ date('d F Y', strtotime($item->tanggal)) }}
+                        </p>
+
+                        <a href="{{ url('show-berita/' . $item->id) }}" class="btn btn-success btn-sm mt-auto">
+                            Baca Selengkapnya <i class="fas fa-arrow-right fa-sm ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        @empty
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> Belum ada berita untuk ditampilkan saat ini.
+                </div>
+            </div>
+        @endforelse
+
+
+
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        {{ $news->links() }}
     </div>
 
     <script src="{{ asset('FE/js/chart.js') }}"></script>

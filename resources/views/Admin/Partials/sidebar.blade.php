@@ -1,38 +1,68 @@
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/') }}">
+                <div class="sidebar-brand-icon">
+                    <img src="{{ asset('FE/img/logo_bulat.png') }}" alt="Logo"
+                        class="rounded-circle border border-white" style="width: 45px; height: 45px; object-fit: cover;">
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">Al Kinanah</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ url('/') }}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
+            @if (Auth::guard('admin_pimpinan')->check())
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{ url('/') }}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                @if (Auth::guard('admin_pimpinan')->user()->is_admin)
+                    <!-- Nav Item - Tables -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('berita') }}">
+                            <i class="fas fa-fw fa-book"></i>
+                            <span>Berita</span></a>
+                    </li>
+                @endif
+
+                <!-- Nav Item - Tables -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('alumni') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Alumni</span></a>
+                </li>
+
+                <!-- Nav Item - Charts -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('grafik') }}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Grafik</span></a>
+                </li>
+            @else
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{ url('/dashboard-alumni') }}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Tables -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('alumni-edit') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Edit Profile</span></a>
+                </li>
+            @endif
 
 
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('alumni') }}">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Alumni</span></a>
-            </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('grafik') }}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Grafik</span></a>
-            </li>
+
 
             {{-- <!-- Divider -->
             <hr class="sidebar-divider">

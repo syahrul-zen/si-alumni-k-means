@@ -123,7 +123,7 @@
                         </div>
 
                         <!-- Jenis Keahlian -->
-                        <div class="col-md-4">
+                        <div class="col-md-6 mb-2">
                             <label class="form-label">Jenis Keahlian</label>
                             <select name="jenis_keahlian" class="custom-select" required>
                                 <option value="">-- Pilih --</option>
@@ -134,6 +134,16 @@
                                 <option value="lain_lain">Lain-lain</option>
                             </select>
 
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Pekerjaan</label>
+                            <input type="text" name="nis" class="form-control">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Tempat Bekera</label>
+                            <input type="text" name="nis" class="form-control">
                         </div>
 
                     </div>

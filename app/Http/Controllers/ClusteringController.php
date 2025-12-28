@@ -7,12 +7,19 @@ use App\Models\AlumniCluster;
 use App\Models\Centroid;
 use App\Models\NumberDataAlumni;
 
+use Illuminate\Support\Facades\Auth;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ClusteringController extends Controller
 {
     public function clustering() {
+
+        if (!Auth::guard('admin_pimpinan')->user()->is_admin) {
+            return redirect('/');
+        }
+
         $dataAlumni = NumberDataAlumni::all()->toArray();
 
         // --- Siapkan data untuk K-Means ---
